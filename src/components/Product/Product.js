@@ -5,7 +5,7 @@ import ProductForm from '../ProductForm/ProductForm';
 import OptionColor from '../OptionColor/OptionColor';
 import OptionSize from '../OptionSize/OptionSize';
 import PropTypes from 'prop-types';
-import {useState} from 'react';
+import {useState, useMemo} from 'react';
 
 
 const Product = props => {
@@ -13,10 +13,11 @@ const Product = props => {
   const [currentColor, setCurrentColor] = useState(props.colors[0]);
   const [currentSize, setCurrentSize] = useState(props.sizes[0]['name']);
 
-  const getPrice = () => {
+  const getPrice = useMemo(() => {
     const toAdd = props.sizes.find(s => s.name === currentSize)['additionalPrice'];
+    // console.log('memo ran');
     return props.basePrice + toAdd;
-  }
+  }, [currentSize, props.sizes, props.basePrice]);
 
   const updateColor = e => {
     setCurrentColor(e.target.id);
@@ -48,7 +49,7 @@ const Product = props => {
 
         <header>
           <h2 className={styles.name}>{props.title}</h2>
-          <span className={styles.price}>Price: {getPrice()}$</span>
+          <span className={styles.price}>Price: {getPrice}$</span>
         </header>
 
         <ProductForm action={handleFormSubmit}>
